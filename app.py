@@ -5,7 +5,7 @@ import psycopg2
 app = Flask(__name__)
 
 #Rander'ın otomotik tanımladığı veritabanı bağlantı bilgisi (DATABASE_URL ortam değişkeni)
-DATABASE_URL =os.getenv("DATAABSE_URL")
+DATABASE_URL =os.getenv("DATAABSE_URL", "postgresql://hello_cloud3_db_5c33_user:v0zPhI7xUyBJiQXRzhSM9dOnUAT8FsJS@dpg-d3tjhd0gjchc73fan1s0-a.oregon-postgres.render.com/hello_cloud3_db_5c33")
 
 # HTML ŞABLONU (tek sayfada from + liste)
 HTML = """
