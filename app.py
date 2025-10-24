@@ -4,7 +4,7 @@ import psycopg2
 
 app = Flask(__name__)
 
-#Rander'ın otomotik tanımladığı veritabanı bağlantı bilgisi (DATABASE_URL ortam değişkeni)
+# Rander'ın otomotik tanımladığı veritabanı bağlantı bilgisi (DATABASE_URL ortam değişkeni)
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://hello_cloud3_db_5c33_user:v0zPhI7xUyBJiQXRzhSM9dOnUAT8FsJS@dpg-d3tjhd0gjchc73fan1s0-a.oregon-postgres.render.com/hello_cloud3_db_5c33")
 
 # HTML ŞABLONU (tek sayfada from + liste)
@@ -53,7 +53,7 @@ def index():
     if request.method == "POST":
         isim = request.form.get("isim")
         if isim:
-          cur.execute("INSERT INTO ziyaretçiler (isim) VALUES (%s)", (isim,))
+          cur.execute("INSERT INTO ziyaretciler (isim) VALUES (%s)", (isim,))
           conn.commit()
 
 cur.execute("SELECET isim FROM ziyaretciler ORDER BY id DESC LIMIT 10")
