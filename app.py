@@ -53,6 +53,7 @@ def index():
 
     # Tablo yoksa oluştur
     cur.execute("CREATE TABLE IF NOT EXISTS ziyaretciler (id SERIAL PRIMARY KEY, isim TEXT)")
+    conn.commit()
 
     # POST isteği geldiğinde formdan isim al ve kaydet
     if request.method == "POST":
@@ -60,6 +61,8 @@ def index():
         if isim:
             cur.execute("INSERT INTO ziyaretciler (isim) VALUES (%s)", (isim,))
             conn.commit()
+            return
+            redirect(url_for("index"))
 
     # Ziyaretçileri sırala
     cur.execute("SELECT isim FROM ziyaretciler ORDER BY id DESC LIMIT 10")
