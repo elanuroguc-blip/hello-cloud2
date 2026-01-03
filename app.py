@@ -5,8 +5,8 @@ import psycopg2
 app = Flask(__name__)
 
 def connect_db():
-    DATABASE_URL = os.environ.get("postgresql://ela:nBRfMf0fXYRF2LYrt9uVBN3MnPHRTsiP@dpg-d5cg64ali9vc73cfpepg-a/hello_cloud3_db_uzdd")
-    return psycopg2.connect(DATABASE_URL)
+    DATABASE_URL = os.environ.get("DATABASE_URL")
+    return psycopg2.connect(DATABASE_URL, sslmode='require')
 
 HTML_TEMPLATE = '''
 <!DOCTYPE html>
