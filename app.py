@@ -5,8 +5,8 @@ import psycopg2
 app = Flask(__name__)
 
 def connect_db():
-    DATABASE_URL = os.environ.get('DATABASE_URL')
-    return psycopg2.connect(DATABASE_URL, sslmode='require')
+    DATABASE_URL = os.environ.get("postgresql://ela:nBRfMf0fXYRF2LYrt9uVBN3MnPHRTsiP@dpg-d5cg64ali9vc73cfpepg-a/hello_cloud3_db_uzdd")
+    return psycopg2.connect(DATABASE_URL)
 
 HTML_TEMPLATE = '''
 <!DOCTYPE html>
@@ -46,29 +46,25 @@ HTML_TEMPLATE = '''
 def index():
     conn = connect_db()
     cur = conn.cursor()
-    
-    # 1. Tabloyu oluştur
+
+    # 1. Tabloyu oluştur ve KAYDET
     cur.execute("CREATE TABLE IF NOT EXISTS mesajlar (id SERIAL PRIMARY KEY, isim TEXT, mesaj TEXT);")
-    
-    # 2. TEMİZLİK SATIRI: Gemini ismindeki eski test verilerini siler
-    cur.execute("DELETE FROM mesajlar WHERE isim = 'Gemini';")
     conn.commit()
-    
+
     if request.method == 'POST':
         isim = request.form.get('isim')
         mesaj = request.form.get('mesaj')
         if isim and mesaj:
             cur.execute("INSERT INTO mesajlar (isim, mesaj) VALUES (%s, %s)", (isim, mesaj))
             conn.commit()
+        return redirect(url_for('index'))
 
-    # Mesajları en yeniden en eskiye çek
     cur.execute("SELECT isim, mesaj FROM mesajlar ORDER BY id DESC;")
     tum_mesajlar = cur.fetchall()
-    
+
     cur.close()
     conn.close()
-    
-    return render_template_string(HTML_TEMPLATE, mesajlar=tum_mesajlar)
 
+    return render_template_string(HTML_TEMPLATE, mesajlar=tum_mesajlar)
 if __name__ == '__main__':
     app.run(debug=True)
