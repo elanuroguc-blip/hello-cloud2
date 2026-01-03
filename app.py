@@ -1,14 +1,15 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, render_template_string, redirect, url_for
 import os
 import psycopg2
 
 app = Flask(__name__)
 
 def connect_db():
-    # Render'daki 'DATABASE_URL' kutusundan bilgiyi çek
     db_url = os.environ.get("DATABASE_URL")
-    # SSL hatasını önlemek için sslmode ekliyoruz
+    if not db_url:
+        raise Exception("DATABASE_URL environment variable tanımlı değil")
     return psycopg2.connect(db_url, sslmode='require')
+
 HTML_TEMPLATE = '''
 <!DOCTYPE html>
 <html>
@@ -48,16 +49,26 @@ def index():
     conn = connect_db()
     cur = conn.cursor()
 
-    # 1. Tabloyu oluştur ve KAYDET
-    cur.execute("CREATE TABLE IF NOT EXISTS mesajlar (id SERIAL PRIMARY KEY, isim TEXT, mesaj TEXT);")
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS mesajlar (
+            id SERIAL PRIMARY KEY,
+            isim TEXT,
+            mesaj TEXT
+        );
+    """)
     conn.commit()
 
     if request.method == 'POST':
         isim = request.form.get('isim')
         mesaj = request.form.get('mesaj')
         if isim and mesaj:
-            cur.execute("INSERT INTO mesajlar (isim, mesaj) VALUES (%s, %s)", (isim, mesaj))
+            cur.execute(
+                "INSERT INTO mesajlar (isim, mesaj) VALUES (%s, %s)",
+                (isim, mesaj)
+            )
             conn.commit()
+        cur.close()
+        conn.close()
         return redirect(url_for('index'))
 
     cur.execute("SELECT isim, mesaj FROM mesajlar ORDER BY id DESC;")
@@ -67,5 +78,6 @@ def index():
     conn.close()
 
     return render_template_string(HTML_TEMPLATE, mesajlar=tum_mesajlar)
+
 if __name__ == '__main__':
     app.run(debug=True)
