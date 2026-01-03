@@ -5,9 +5,10 @@ import psycopg2
 app = Flask(__name__)
 
 def connect_db():
-    DATABASE_URL = os.environ.get("DATABASE_URL")
-    # sslmode=require yerine sslrootcert parametresiyle daha güvenli hale getiriyoruz
-    return psycopg2.connect(DATABASE_URL, sslmode='require')
+    # Render'daki 'DATABASE_URL' kutusundan bilgiyi çek
+    db_url = os.environ.get("DATABASE_URL")
+    # SSL hatasını önlemek için sslmode ekliyoruz
+    return psycopg2.connect(db_url, sslmode='require')
 HTML_TEMPLATE = '''
 <!DOCTYPE html>
 <html>
