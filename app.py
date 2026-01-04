@@ -29,11 +29,11 @@ HTML_TEMPLATE = '''
         <h2>Ziyaretçi Defteri</h2>
         <form method="POST">
             <input type="text" name="isim" placeholder="Adınız" required>
-            <textarea name="mesaj" placeholder="Mesajınız" required></textarea>
-            <button type="submit">Mesajı Paylaş</button>
+            <textarea name="mesaj" placeholder="Şehriniz" required></textarea>
+            <button type="submit">Gönder</button>
         </form>
         <hr>
-        <h3>Gelen Mesajlar</h3>
+        <h3>Ziyaretçiler</h3>
         {% for isim, mesaj in mesajlar %}
             <div class="mesaj-kutusu">
                 <strong>{{ isim }}:</strong> {{ mesaj }}
